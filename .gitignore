@@ -1,12 +1,3 @@
-# Binaries
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
-
-# Directories
-vendor/
+build/bin
+node_modules
+frontend/dist
