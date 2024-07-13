@@ -45,18 +45,6 @@ func initDB() *sql.DB {
 		log.Fatal(err)
 	}
 
-	createUserTableSQL := `CREATE TABLE IF NOT EXISTS users (
-		"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-		"username" TEXT UNIQUE NOT NULL,
-		"password_hash" TEXT NOT NULL,
-		"token" TEXT NOT NULL
-	);`
-
-	_, err = db.Exec(createUserTableSQL)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	createPasswordTableSQL := `CREATE TABLE IF NOT EXISTS passwords (
 		"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 		"url" TEXT UNIQUE NOT NULL,

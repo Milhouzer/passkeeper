@@ -4,3 +4,5 @@
 export function GetUsername():Promise<string>;
 
 export function IsLogged():Promise<boolean>;
+
+export function Login(arg1:string,arg2:string):Promise<boolean>;

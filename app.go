@@ -3,9 +3,12 @@ package main
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"log"
 	app_db "passkeeper/backend/db"
 	"passkeeper/backend/models"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Session struct {
@@ -27,7 +30,6 @@ func (a *App) GetUsername() string {
 }
 
 func (a *App) IsLogged() bool {
-	return false
 	return a.session != nil
 }
 
@@ -38,7 +40,28 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.db = initDB()
-	a.loadUser()
+	a.loadPasswords()
+}
+
+func (a *App) Login(username, password string) (bool, error) {
+	user, err := app_db.GetUserByUsername(a.db, username)
+	if err != nil {
+		return false, err
+	}
+	if user == nil || !verifyPassword(user.PasswordHash, password) {
+		return false, errors.New("invalid username or password")
+	}
+
+	return true, nil
+}
+
+func verifyPassword(hashedPassword, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	return err == nil
+}
+
+func (a *App) loadPasswords() {
+
 }
 
 func (a *App) loadUser() {

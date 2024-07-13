@@ -9,3 +9,7 @@ export function GetUsername() {
 export function IsLogged() {
   return window['go']['main']['App']['IsLogged']();
 }
+
+export function Login(arg1, arg2) {
+  return window['go']['main']['App']['Login'](arg1, arg2);
+}
