@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"embed"
 	"log"
+	"passkeeper/backend/models"
 
 	_ "modernc.org/sqlite"
 
@@ -56,5 +57,27 @@ func initDB() *sql.DB {
 		log.Fatal(err)
 	}
 
+	createFakeData(db)
+
 	return db
+}
+
+// Create fake passwords objects to add to the db
+func createFakeData(db *sql.DB) {
+	fakePasswords := []models.Password{
+		{Url: "https://example.com", PasswordHash: "hash1"},
+		{Url: "https://test.com", PasswordHash: "hash2"},
+		{Url: "https://dummy.com", PasswordHash: "hash3"},
+	}
+
+	insertPasswordSQL := `INSERT INTO passwords (url, password_hash) VALUES (?, ?)`
+
+	for _, pwd := range fakePasswords {
+		_, err := db.Exec(insertPasswordSQL, pwd.Url, pwd.PasswordHash)
+		if err != nil {
+			log.Printf("Error inserting data for URL %s: %v\n", pwd.Url, err)
+		} else {
+			log.Printf("Inserted data for URL %s\n", pwd.Url)
+		}
+	}
 }

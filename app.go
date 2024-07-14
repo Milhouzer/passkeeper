@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"log"
 	app_db "passkeeper/backend/db"
@@ -13,6 +14,7 @@ import (
 
 type Session struct {
 	user *models.User
+	// timeout int
 }
 
 type App struct {
@@ -40,7 +42,6 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.db = initDB()
-	a.loadPasswords()
 }
 
 func (a *App) Login(username, password string) (bool, error) {
@@ -60,35 +61,19 @@ func verifyPassword(hashedPassword, password string) bool {
 	return err == nil
 }
 
-func (a *App) loadPasswords() {
-
-}
-
-func (a *App) loadUser() {
-	a.session = nil
-	_, err := app_db.FindFirst(a.db)
+func (a *App) FetchPasswords() string {
+	passwords, err := app_db.FetchPasswords(a.db)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error fetching passwords:", err)
+		return ""
 	}
 
-	// if existingUser != nil {
-	// 	a.session = &Session{
-	// 		user: existingUser,
-	// 	}
-	// 	return
-	// }
+	jsonPasswords, err := json.Marshal(passwords)
+	if err != nil {
+		log.Println("Error marshalling passwords:", err)
+		return ""
+	}
 
-	// err = app_db.CreateUser(a.db, "exampleUser2", "securePassword")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// existingUser, err = app_db.GetUserByUsername(a.db, "exampleUser")
-	// if err != nil {
-	// 	return
-	// }
-
-	// a.session = &Session{
-	// 	user: existingUser,
-	// }
+	log.Println(string(jsonPasswords))
+	return string(jsonPasswords)
 }

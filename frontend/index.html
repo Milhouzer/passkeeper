@@ -6,7 +6,24 @@
     <title>passkeeper</title>
 </head>
 <body>
-<div id="app"></div>
+<div id="app">
+    <div class="container">
+        <header>
+            <h1 id="title">Manage Passwords</h1>
+        </header>
+        <main>
+            <div class="list-container">
+                <ul class="scrollable-list" id="passwordList">
+                    <!-- List if populated with DB infos. -->
+                </ul>
+            </div>
+            <div class="action-container">
+                <input type="text" id="inputField" placeholder="Enter new password">
+                <button id="actionButton" onclick="fetchPasswords">Submit</button>
+            </div>
+        </main>
+    </div>
+</div>
 <script src="./src/main.js" type="module"></script>
 </body>
 </html>
